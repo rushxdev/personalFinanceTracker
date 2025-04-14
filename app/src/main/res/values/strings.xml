@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PersonalFinanceTracker</string>
+    <string name="addTransBtn">Add Transaction</string>
+
+<!--    transaction-view-->
+    <string name="title">Title</string>
+    <string name="amount">Amount: %1$.2f</string>
+    <string name="category">Category: %1$s</string>
+    <string name="date">Date: %1$s</string>
+</resources>
