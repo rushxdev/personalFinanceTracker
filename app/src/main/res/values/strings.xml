@@ -2,9 +2,16 @@
     <string name="app_name">PersonalFinanceTracker</string>
     <string name="addTransBtn">Add Transaction</string>
 
-<!--    transaction-view-->
+    <!--    transaction-view-->
     <string name="title">Title</string>
     <string name="amount">Amount: %1$.2f</string>
     <string name="category">Category: %1$s</string>
     <string name="date">Date: %1$s</string>
+
+    <!--    dialog add transactions-->
+    <string name="hint_title">Title</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_category">Category</string>
+    <string name="hint_select_date">Select Date</string>
+
 </resources>
