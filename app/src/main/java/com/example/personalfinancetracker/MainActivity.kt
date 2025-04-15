@@ -33,8 +33,9 @@ class MainActivity : AppCompatActivity() {
         addTransactionButton = findViewById(R.id.addTransactionButton)
 
         transaction = ArrayList()
-        transactionAdapter = TransactionAdapter(transaction)
-        transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView)
+        transactionAdapter = TransactionAdapter(transaction) { transaction, position ->
+            showEditTransactionDialog(transaction, position)
+        }
         transactionsRecyclerView.layoutManager = LinearLayoutManager(this)
         transactionsRecyclerView.adapter = transactionAdapter
 
@@ -81,6 +82,55 @@ class MainActivity : AppCompatActivity() {
        }
         builder.show()
 
+    }
+
+    private fun showEditTransactionDialog(transaction: Transaction, position: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Edit Transaction")
+
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_add_transaction, null)
+        builder.setView(view)
+
+        val titleEditText = view.findViewById<EditText>(R.id.titleEditText)
+        val amountEditText = view.findViewById<EditText>(R.id.amountEditText)
+        val categoryEditText = view.findViewById<EditText>(R.id.categoryEditText)
+        val dateTextView = view.findViewById<TextView>(R.id.dateTextView)
+
+        titleEditText.setText(transaction.title)
+        amountEditText.setText(String.format(Locale.getDefault(), "%.2f", transaction.amount))
+        categoryEditText.setText(transaction.category)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        dateTextView.text = dateFormat.format(transaction.date)
+
+        var selectedDate = transaction.date
+
+        dateTextView.setOnClickListener {
+            showDatePickerDialog(dateTextView) { date ->
+                selectedDate = date
+            }
+        }
+
+        builder.setPositiveButton("Save") { dialog, _ ->
+            val title = titleEditText.text.toString()
+            val amount = amountEditText.text.toString().toDoubleOrNull() ?: 0.0
+            val category = categoryEditText.text.toString()
+
+            if (title.isNotEmpty() && amount != 0.0 && category.isNotEmpty()) {
+                val updatedTransaction = Transaction(title, amount, category, selectedDate)
+                updateTransaction(position, updatedTransaction)
+            } else {
+                // Handle invalid input
+            }
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+
+    }
+    private fun updateTransaction( position: Int, transaction: Transaction) {
+        this.transaction[position] = transaction
+        transactionAdapter.notifyItemChanged(position)
     }
     private fun showDatePickerDialog(dateTextView: TextView, onDateSet: (Date) -> Unit) {
         val calendar = Calendar.getInstance()
