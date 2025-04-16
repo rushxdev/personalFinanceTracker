@@ -14,4 +14,7 @@
     <string name="hint_category">Category</string>
     <string name="hint_select_date">Select Date</string>
 
+
+    <string name="category_totals">%1$s: %2$.2f</string>
+
 </resources>

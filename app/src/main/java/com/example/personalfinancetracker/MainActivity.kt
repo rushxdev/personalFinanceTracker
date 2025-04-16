@@ -14,6 +14,7 @@ import java.util.ArrayList
 import java.util.Date
 import java.util.Calendar
 import android.app.DatePickerDialog
+import android.widget.LinearLayout
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -42,6 +43,35 @@ class MainActivity : AppCompatActivity() {
         addTransactionButton.setOnClickListener {
             showAddTransactionDialog()
         }
+
+        calculateCategoryTotals()
+    }
+
+    private fun calculateCategoryTotals() {
+        val categoryTotals = mutableMapOf<String, Double>()
+
+        for (transaction in transaction) {
+            val category = transaction.category
+            val amount = transaction.amount
+
+            if (categoryTotals.containsKey(category)) {
+                categoryTotals[category] = categoryTotals[category]!! + amount
+            } else {
+                categoryTotals[category] = amount
+            }
+        }
+        displayCategoryTotals(categoryTotals)
+    }
+
+    private fun displayCategoryTotals(categoryTotals: Map<String, Double>) {
+        val categoryTotalsContainer = findViewById<LinearLayout>(R.id.categoryTotalsContainer)
+        categoryTotalsContainer.removeAllViews()
+        for ((category, total) in categoryTotals) {
+            val categoryTextView = TextView(this)
+            categoryTextView.text = getString(R.string.category_totals, category, total)
+            categoryTotalsContainer.addView(categoryTextView)
+        }
+
     }
 
     private fun showAddTransactionDialog() {
@@ -174,7 +204,5 @@ class MainActivity : AppCompatActivity() {
         transactionAdapter.notifyItemInserted(this.transaction.size - 1)
         transactionsRecyclerView.scrollToPosition(this.transaction.size - 1)
     }
-
-
 }
 
