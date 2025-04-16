@@ -123,15 +123,29 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.dismiss()
         }
+
+        builder.setNeutralButton("Delete") { dialog, _ ->
+            deleteTransaction(position)
+            dialog.dismiss()
+        }
+
         builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
         }
 
     }
+
     private fun updateTransaction( position: Int, transaction: Transaction) {
         this.transaction[position] = transaction
         transactionAdapter.notifyItemChanged(position)
     }
+
+    private fun deleteTransaction(position: Int) {
+        this.transaction.removeAt(position)
+        transactionAdapter.notifyItemRemoved(position)
+        transactionAdapter.notifyItemRangeChanged(position, this.transaction.size)
+    }
+
     private fun showDatePickerDialog(dateTextView: TextView, onDateSet: (Date) -> Unit) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -160,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         transactionAdapter.notifyItemInserted(this.transaction.size - 1)
         transactionsRecyclerView.scrollToPosition(this.transaction.size - 1)
     }
+
 
 }
 
